@@ -196,15 +196,29 @@ body {
   color: #1e7e34;
 }
 
-.status-requested {
-  background: #fff3cd;
-  color: #856404;
+.status-unavailable {
+  background: #f5b7b5;
+  color: #7d2626;
 }
 
-.status-collected {
-  background: var(--gray-200);
-  color: var(--gray-700);
+
+
+.studentStatus-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
 }
+.studentStatus-requested {
+ background:rgb(229, 245, 150);
+ color:rgb(139, 143, 42);
+}
+
+.studentStatus-approved {
+  background: #a5ccd4;
+  color: #29243e;
+}
+
 
 .item-details {
   margin-bottom: 20px;

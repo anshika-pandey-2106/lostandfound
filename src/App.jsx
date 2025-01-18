@@ -63,78 +63,54 @@ const SAMPLE_ITEMS = [
     description: "Found near study area",
     date: "2025-01-15",
     status: "available",
+    studentStatus: " ",
     image: null,
   },
   {
     id: 2,
-    name: "Blue Umbrella",
-    type: "Personal Belongings",
-    location: "Cafeteria",
-    description: "Left on table",
-    date: "2025-01-16",
-    status: "requested",
-    image: null,
-  },
-  {
-    id: 1,
     name: "Black Laptop",
     type: "Electronics",
     location: "Library",
     description: "Found near study area",
     date: "2025-01-15",
     status: "available",
+    studentStatus: " ",
     image: null,
   },
   {
     id: 3,
-    name: "orange Laptop",
+    name: "Black Laptop",
     type: "Electronics",
     location: "Library",
     description: "Found near study area",
     date: "2025-01-15",
     status: "available",
+    studentStatus: "approved",
     image: null,
   },
   {
     id: 4,
+    name: "Black Laptop",
+    type: "Stationery",
+    location: "Library",
+    description: "Found near study area",
+    date: "2025-01-15",
+    status: "available",
+    studentStatus: "requested",
+    image: null,
+  },
+  {
+    id: 5,
     name: "green Laptop",
     type: "Electronics",
     location: "Library",
     description: "Found near study area",
     date: "2025-01-15",
-    status: "available",
+    status: "unavailable",
+    studentStatus: " ",
     image: null,
-  },
-  {
-    id: 4,
-    name: "green Laptop",
-    type: "Electronics",
-    location: "Library",
-    description: "Found near study area",
-    date: "2025-01-15",
-    status: "available",
-    image: null,
-  },
-  {
-    id: 4,
-    name: "green Laptop",
-    type: "Electronics",
-    location: "Library",
-    description: "Found near study area",
-    date: "2025-01-15",
-    status: "available",
-    image: null,
-  },
-  {
-    id: 4,
-    name: "green Laptop",
-    type: "Electronics",
-    location: "Library",
-    description: "Found near study area",
-    date: "2025-01-15",
-    status: "available",
-    image: null,
-  },
+  }
+  // ... rest of the sample items
 ];
 
 // Filter Component
@@ -183,7 +159,48 @@ const FilterPanel = ({ onFilterChange, isSheet = false }) => {
 };
 
 // Item Card Component
-const ItemCard = ({ item }) => {
+const ItemCard = ({ item, onStatusUpdate }) => {
+  const handleCreateRequest = () => {
+    onStatusUpdate(item.id, { status: "available", studentStatus: "requested" });
+  };
+
+  const handleMarkAsCollected = () => {
+    onStatusUpdate(item.id, { status: "unavailable", studentStatus: "approved" });
+  };
+
+  const renderButton = () => {
+    if (item.status === "unavailable") {
+      return null;
+    }
+
+    if (item.status === "available") {
+      if (item.studentStatus === " " || !item.studentStatus) {
+        return (
+          <button className="button button-primary" onClick={handleCreateRequest}>
+            Create Request
+            <ClockIcon />
+          </button>
+        );
+      } else if (item.studentStatus === "requested") {
+        return (
+          <button className="button button-outline" disabled>
+            Requested
+            <ClockIcon />
+          </button>
+        );
+      } else if (item.studentStatus === "approved") {
+        return (
+          <button className="button button-outline" onClick={handleMarkAsCollected}>
+            Mark as Collected
+            <CheckIcon />
+          </button>
+        );
+      }
+    }
+
+    return null;
+  };
+
   return (
     <div className="item-card">
       <div className="item-grid">
@@ -206,6 +223,11 @@ const ItemCard = ({ item }) => {
             <span className={`status-badge status-${item.status}`}>
               {item.status}
             </span>
+            {item.studentStatus && item.studentStatus.trim() && (
+              <span className={`studentStatus-badge studentStatus-${item.studentStatus}`}>
+                {item.studentStatus}
+              </span>
+            )}
           </div>
 
           <div className="item-details">
@@ -221,17 +243,7 @@ const ItemCard = ({ item }) => {
           </div>
 
           <div className="item-footer">
-            {item.status === "available" ? (
-              <button className="button button-primary">
-                Create Request
-                <ClockIcon />
-              </button>
-            ) : item.status === "requested" ? (
-              <button className="button button-outline">
-                Mark as Collected
-                <CheckIcon />
-              </button>
-            ) : null}
+            {renderButton()}
           </div>
         </div>
       </div>
@@ -289,7 +301,15 @@ const StudentDashboard = () => {
     search: "",
   });
   const [sortOrder, setSortOrder] = useState("latest");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleStatusUpdate = (itemId, newStatus) => {
+    setItems(items.map(item => 
+      item.id === itemId 
+        ? { ...item, ...newStatus }
+        : item
+    ));
+  };
+
   const handleFilterChange = (type, value, checked = null) => {
     if (type === "type") {
       setFilters((prev) => ({
@@ -327,16 +347,19 @@ const StudentDashboard = () => {
     });
 
   return (
-    
     <div className="dashboard">
-       <>
-      
       <div className="dashboard-container">
-        <h1 className="dashboard-title">Lost & Found Items</h1>
-
+        <div className="navbar">
+          <h1 className="dashboard-title">Lost & Found Items</h1>
+        </div>
+        
         <div className="items-container">
           {filteredItems.map((item) => (
-            <ItemCard key={item.id} item={item} />
+            <ItemCard 
+              key={item.id} 
+              item={item} 
+              onStatusUpdate={handleStatusUpdate}
+            />
           ))}
         </div>
       </div>
@@ -345,10 +368,7 @@ const StudentDashboard = () => {
         onOpenFilter={handleFilterChange}
         onSortChange={handleSortChange}
       />
-      </>
-     
     </div>
-    
   );
 };
 
