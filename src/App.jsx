@@ -101,7 +101,7 @@ const SAMPLE_ITEMS = [
   },
   {
     id: 5,
-    name: "green Laptop",
+    name: "Green Laptop",
     type: "Electronics",
     location: "Library",
     description: "Found near study area",
@@ -109,8 +109,7 @@ const SAMPLE_ITEMS = [
     status: "unavailable",
     studentStatus: " ",
     image: null,
-  }
-  // ... rest of the sample items
+  },
 ];
 
 // Filter Component
@@ -122,6 +121,8 @@ const FilterPanel = ({ onFilterChange, isSheet = false }) => {
     "Personal Belongings",
     "Miscellaneous",
   ];
+  const STATUSES = ["available", "unavailable"];
+  const STUDENT_STATUSES = ["requested", "approved"];
 
   return (
     <div className={`filter-panel ${isSheet ? "sheet" : ""}`}>
@@ -140,6 +141,36 @@ const FilterPanel = ({ onFilterChange, isSheet = false }) => {
                   }
                 />
                 <span>{type}</span>
+              </label>
+            ))}
+          </div>
+
+          <p className="filter-label">Status</p>
+          <div className="checkbox-group">
+            {STATUSES.map((status) => (
+              <label key={status} className="checkbox-label">
+                <input
+                  type="checkbox"
+                  onChange={(e) =>
+                    onFilterChange("status", status, e.target.checked)
+                  }
+                />
+                <span>{status}</span>
+              </label>
+            ))}
+          </div>
+
+          <p className="filter-label">Student Status</p>
+          <div className="checkbox-group">
+            {STUDENT_STATUSES.map((studentStatus) => (
+              <label key={studentStatus} className="checkbox-label">
+                <input
+                  type="checkbox"
+                  onChange={(e) =>
+                    onFilterChange("studentStatus", studentStatus, e.target.checked)
+                  }
+                />
+                <span>{studentStatus}</span>
               </label>
             ))}
           </div>
@@ -224,7 +255,9 @@ const ItemCard = ({ item, onStatusUpdate }) => {
               {item.status}
             </span>
             {item.studentStatus && item.studentStatus.trim() && (
-              <span className={`studentStatus-badge studentStatus-${item.studentStatus}`}>
+              <span
+                className={`studentStatus-badge studentStatus-${item.studentStatus}`}
+              >
                 {item.studentStatus}
               </span>
             )}
@@ -242,9 +275,7 @@ const ItemCard = ({ item, onStatusUpdate }) => {
             </p>
           </div>
 
-          <div className="item-footer">
-            {renderButton()}
-          </div>
+          <div className="item-footer">{renderButton()}</div>
         </div>
       </div>
     </div>
@@ -298,16 +329,16 @@ const StudentDashboard = () => {
   const [items, setItems] = useState(SAMPLE_ITEMS);
   const [filters, setFilters] = useState({
     types: [],
+    statuses: [],
+    studentStatuses: [],
     search: "",
   });
   const [sortOrder, setSortOrder] = useState("latest");
 
   const handleStatusUpdate = (itemId, newStatus) => {
-    setItems(items.map(item => 
-      item.id === itemId 
-        ? { ...item, ...newStatus }
-        : item
-    ));
+    setItems(
+      items.map((item) => (item.id === itemId ? { ...item, ...newStatus } : item))
+    );
   };
 
   const handleFilterChange = (type, value, checked = null) => {
@@ -317,6 +348,20 @@ const StudentDashboard = () => {
         types: checked
           ? [...prev.types, value]
           : prev.types.filter((t) => t !== value),
+      }));
+    } else if (type === "status") {
+      setFilters((prev) => ({
+        ...prev,
+        statuses: checked
+          ? [...prev.statuses, value]
+          : prev.statuses.filter((s) => s !== value),
+      }));
+    } else if (type === "studentStatus") {
+      setFilters((prev) => ({
+        ...prev,
+        studentStatuses: checked
+          ? [...prev.studentStatuses, value]
+          : prev.studentStatuses.filter((ss) => ss !== value),
       }));
     } else if (type === "search") {
       setFilters((prev) => ({
@@ -334,10 +379,15 @@ const StudentDashboard = () => {
     .filter((item) => {
       const matchesType =
         filters.types.length === 0 || filters.types.includes(item.type);
+      const matchesStatus =
+        filters.statuses.length === 0 || filters.statuses.includes(item.status);
+      const matchesStudentStatus =
+        filters.studentStatuses.length === 0 ||
+        filters.studentStatuses.includes(item.studentStatus);
       const matchesSearch =
         item.name.toLowerCase().includes(filters.search.toLowerCase()) ||
         item.description.toLowerCase().includes(filters.search.toLowerCase());
-      return matchesType && matchesSearch;
+      return matchesType && matchesStatus && matchesStudentStatus && matchesSearch;
     })
     .sort((a, b) => {
       if (sortOrder === "latest") {
@@ -352,12 +402,12 @@ const StudentDashboard = () => {
         <div className="navbar">
           <h1 className="dashboard-title">Lost & Found Items</h1>
         </div>
-        
+
         <div className="items-container">
           {filteredItems.map((item) => (
-            <ItemCard 
-              key={item.id} 
-              item={item} 
+            <ItemCard
+              key={item.id}
+              item={item}
               onStatusUpdate={handleStatusUpdate}
             />
           ))}
