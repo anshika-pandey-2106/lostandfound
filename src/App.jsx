@@ -207,10 +207,16 @@ const ItemCard = ({ item, onStatusUpdate }) => {
     if (item.status === "available") {
       if (item.studentStatus === " " || !item.studentStatus) {
         return (
-          <button className="button button-primary" onClick={handleCreateRequest}>
+          <button className="button button-primary" onClick={() => {
+            const confirmAction = window.confirm("Are you sure you want to proceed?");
+            if (confirmAction) {
+                handleCreateRequest();
+            }
+        }}>
             Create Request
             <ClockIcon />
-          </button>
+        </button>
+        
         );
       } else if (item.studentStatus === "requested") {
         return (
@@ -221,7 +227,13 @@ const ItemCard = ({ item, onStatusUpdate }) => {
         );
       } else if (item.studentStatus === "approved") {
         return (
-          <button className="button button-outline" onClick={handleMarkAsCollected}>
+          <button className="button button-outline" onClick={()=>
+          {const confirmAction = window.confirm("Are you sure you want to proceed?");
+            if (confirmAction) {
+                handleMarkAsCollected();
+            }
+        }}>
+
             Mark as Collected
             <CheckIcon />
           </button>
