@@ -1,7 +1,12 @@
 Found But Lost:
+<br>
 A digital solution to streamline the lost and found process at our university, replacing the traditional paper-based system with an efficient web application.
-🎯 Problem Statement
-The current lost and found system faces several challenges:
+<br />
+<br>
+🎯 Problem Statement: 
+The current lost and found system faces several challenges:<br/>
+
+
 
 Students waste time physically checking multiple times for lost items
 Complex paperwork and verification process for item claims
