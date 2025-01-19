@@ -9,24 +9,30 @@ The current lost and found system faces several challenges:<br/>
 
 
 Students waste time physically checking multiple times for lost items
+<br><br/>
 Complex paperwork and verification process for item claims
+<br><br/>
 Manual record-keeping creates inefficiencies for security personnel
+<br><br/>
 No centralized system to track and manage found items
-
+<br><br/>
+<br><br/>
 🌟 Features
+<br><br/>
 For Students
-
+<br><br/>
 Quick sign-up using SNU ID credentials
-Real-time dashboard to view all found items
-Digital item claim submission
-Status tracking for submitted claims
+<br><br/>
+Real-time dashboard to view all found items<br><br/>
+Digital item claim submission<br><br/>
+Status tracking for submitted claims<br><br/>
 
-
+<br><br/>
 For Administrators
-
-Dedicated admin dashboard
-Simple item registration system
-Easy edit option on items
-Digital approval process for requests
-Inventory management tools
+<br><br/>
+Dedicated admin dashboard<br><br/>
+Simple item registration system<br><br/>
+Easy edit option on items<br><br/>
+Digital approval process for requests<br><br/>
+Inventory management tools<br><br/>
 
